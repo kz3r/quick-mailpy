@@ -8,8 +8,9 @@ initfile = os.path.join(thisfolder, 'settings.conf')
 
 # Setup command line args
 argparser = argparse.ArgumentParser(description='Quickly send a mail to an SMTP server')
-argparser.add_argument('-r','--receiver', type=str, help='Email address to receive this message')
-argparser.add_argument('-m','--message', type=str, help='Subject and body to the email message.')
+argparser.add_argument('-r','--receiver', type=str, help='Email address to receive the message', required=True)
+argparser.add_argument('-s','--subject', type=str, help='Mail subject', required=True)
+argparser.add_argument('-m','--message', type=str, help='Message body', required=True)
 
 # Read parameters from settings file
 parser = configparser.ConfigParser()
@@ -23,15 +24,24 @@ password = parser.get('default', 'password')
 
 # Read parameters from command line arguments
 args = argparser.parse_args()
-receiver_mail = args.receiver #"target@example.com"
-message = args.message #"Subject: Test Mail \n Sending mail for test purposes. \n Do not reply."
+mail_receiver = args.receiver #e.g.: "target@example.com"
+mail_subject = args.subject #e.g.: "Test Mail"
+mail_body = args.message #e.g.: "Sending mail for test purposes. \n Do not reply."
 
-# Simple SMTP is currently disabled
+#Building the complete message expected by smtplib
+message = f"""\
+Subject: {mail_subject}
+To: {mail_receiver}
+From: {sender_mail}
+
+{mail_body}"""
+
+# Simple SMTP for test purposes -- currently disabled
 """
 with smtplib.SMTP(smtp_server, port) as sserver:
     print('Login...')
     sserver.login(user, password)
-    sserver.sendmail(sender_mail, receiver_mail, message)
+    sserver.sendmail(sender_mail, mail_receiver, message)
     print('Mail sent.')
 """
 
@@ -46,7 +56,7 @@ try:
     server.ehlo() # Can be omitted
     server.login(user, password)
     print('Connection secured...')
-    server.sendmail(sender_mail, receiver_mail, message)
+    server.sendmail(sender_mail, mail_receiver, message)
     print('Mail sent.')
 except Exception as e:
     # Print any error messages to stdout
