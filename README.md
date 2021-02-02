@@ -2,7 +2,7 @@
 
 **Quickly send mails via command line**
 
-<sub>built with Python 3</sub>
+<sub>built with Python 3.7</sub>
 
 ### Parameters
 
@@ -27,7 +27,8 @@ Execution parameters are configured in the file `setttings.conf`
 $> python mail.py -h
 
 # -r, --receiver: Email address to receive the message
-# -m, --message: Subject and body to the email message
+# -s, --subject: Mail subject
+# -m, --message: Message body
 # ps: Both parameters must be enclosed within quotation marks
-$> python mail.py -r "target@example.com" -m "Subject: Test Mail \n Sending test mail.\nDo not reply."
+$> python mail.py -r "target@example.com" -s "Testing mail" -m "This is a test mail. Do not reply."
 ```
